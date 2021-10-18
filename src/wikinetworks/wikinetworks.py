@@ -122,7 +122,7 @@ def getNodeLoc(features):
         textlabel = entry.get("TextLabel")
         color = graphics.get("Color")
         color = "".join(["#", str(color)])
-        if color is None or color is "None":
+        if color is None or color == "None":
             color = "#000000"
         # get database identifiers
         databaseInf = entry.find("Xref")
@@ -130,9 +130,9 @@ def getNodeLoc(features):
             database = databaseInf.get("Database")
             databaseID = databaseInf.get("ID")
             # if database information is not found, replace with textlabel
-            if database is None or database is "":
+            if database is None or database == "":
                 database = "Unknown"
-            if databaseID is None or databaseID is "":
+            if databaseID is None or databaseID == "":
                 databaseID = textlabel
         else:
             database = "Unknown"
@@ -631,7 +631,7 @@ def mapEndPoints(featureDFs):
     for feature in featureDFs.keys():
         # print(feature)
 
-        if not feature is "interactDF" and not feature is "groupDF":
+        if not feature == "interactDF" and not feature == "groupDF":
 
             # Get groupIDs for each node
             groupIDs = featureDFs[feature]["groupref"]
