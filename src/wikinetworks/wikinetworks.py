@@ -8,7 +8,6 @@ from bs4 import BeautifulSoup
 from random import randint, sample, choice
 import requests
 import binascii
-from bioservices import WikiPathways
 import numpy as np
 from shapely.geometry import *
 from scipy.spatial import cKDTree, distance_matrix
@@ -19,7 +18,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import glob
 from string import ascii_uppercase, digits
-from unidecode import unidecode
 import collections
 
 
@@ -27,13 +25,12 @@ def id_generator(size=5, chars=ascii_uppercase + digits):
     return "".join(choice(chars) for _ in range(size))
 
 
-def givenCodeGetGPML(s, code):
-    """download gpml files from wikipathways database"""
-    code = code.decode()
-    res = s.getPathwayAs(code, filetype="gpml")
-    # newres = unidecode(res)
-    newres = binascii.a2b_base64(bytes(res, "ascii"))  # convert to ascii
-    return newres
+def readGpml(filename):
+    """Read gpml file from wikipathways database"""
+    with open(filename, "rb") as fd:
+        content = fd.read()
+
+    return content
 
 
 def getCurationTags(s, code):
@@ -1440,9 +1437,9 @@ def edgeListToCSV(G, pathwayID):
     fh.close()
 
 
-def runParsePathway(s, pathwayID):
+def runParsePathway(pathwayID, filename):
     # set up processing pipeline, stage processed input
-    gpml = givenCodeGetGPML(s, pathwayID.encode("utf-8"))
+    gpml = readGpml(filename)
     featureList = makeFeatureLists(gpml)
     featureDFs = getFeatureDFs(featureList)
     # pipeline
